@@ -2,13 +2,13 @@ const Quran = require('../models').quran;
 
 // Retrieve all Tutorials from the database.
 exports.findAll = (req, res) => {
-  Quran.findAll()
+  Quran.findAll({ attributes: ['sura', 'aya', 'text'] })
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || 'Some error occurred while retrieving Quran.',
+        message: err.message || 'Some error occurred while retrieving Quran.'
       });
     });
 };
@@ -17,13 +17,16 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   const { id } = req.params;
 
-  Quran.findByPk(id)
+  Quran.findAll({
+    where: { sura: id },
+    attributes: ['sura', 'aya', 'text']
+  })
     .then((data) => {
       res.send(data);
     })
-    .catch(() => {
+    .catch((err) => {
       res.status(500).send({
-        message: `Error retrieving Tutorial with id=${id}`,
+        message: err.message || 'Some error occurred while retrieving Quran.'
       });
     });
 };

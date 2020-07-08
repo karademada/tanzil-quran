@@ -1,25 +1,24 @@
+require('dotenv').config();
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const createError = require('http-errors');
-require('dotenv').config();
-
 const cors = require('cors');
+
+const quranRouter = require('./app/routes/quran.routes');
+const db = require('./app/models');
 
 const app = express();
 
 const corsOptions = {
-  origin: `http://localhost:${process.env.PORT}`,
+  origin: `http://localhost:${process.env.PORT}`
 };
-
-const quranRouter = require('./app/routes/quran.routes');
 
 app.use(helmet());
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-const db = require('./app/models');
 
 db.sequelize.authenticate().then(
   () => {
@@ -30,7 +29,7 @@ db.sequelize.authenticate().then(
   }
 );
 
-app.use('/quran', quranRouter)
+app.use('/quran', quranRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
